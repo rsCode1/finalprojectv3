@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Parkinson's Data Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
+</head>
+
+<body>
+    <div id="year-month-selector">
+        <label for="calendar">Select Month:</label>
+        <input id='calendar' />
+
+        <!-- Existing hidden selectors for compatibility -->
+        <select id="year" style="display:none;"></select>
+        <select id="month" style="display:none;"></select>
+
+        <button id="load-data" style="display:none;">Load Data</button>
+    </div>
+    <div id="date-selector-container">
+        <label for="date-selector">Select Date:</label>
+        <select id="date-selector"></select>
+    </div>
+    <div id="charts">
+        <div id="tt1">
+            <div id="combined-chart" class="chart"></div>
+            <div id="polar-plot" class="chart"></div>
+        </div>
+        </br>
+        <div id="tt2">
+            <div id="fitness-chart" class="chart"></div>
+            <div id="parkinsons-chart" class="chart"></div>
+        </div>
+    </div>
+    <div id="tooltip" class="tooltip"></div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://jsuites.net/v5/jsuites.js"></script>
+    <script src="script.js" defer></script>
+
+</body>
+
+</html>
