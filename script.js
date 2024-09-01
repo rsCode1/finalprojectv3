@@ -173,7 +173,9 @@ function calculateDailyAverages(data) {
 }
 
 function createCombinedChart(data) {
-    const width = 700, height = 250;
+    const container = d3.select("#combined-chart");
+    const width = container.node().getBoundingClientRect().width - 250; // Subtract padding
+    const height = 300; // You can adjust this value
     const margin = { top: 50, right: 50, bottom: 100, left: 80 };
 
     const { fitnessAverages, parkinsonsAverages } = calculateDailyAverages(data);
@@ -580,7 +582,9 @@ function createBarChart(data, key, title, selector) {
 }
 
 function createPolarPlot(data) {
-    const width = 350, height = 300;
+    const container = d3.select("#polar-plot");
+    const width = container.node().getBoundingClientRect().width - 40; // Subtract padding
+    const height = width;
     const margin = { top: 50, right: 50, bottom: 50, left: 50 };
 
     const svg = d3.select("#polar-plot")

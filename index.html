@@ -1,71 +1,183 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="bg-gradient-to-br from-blue-50 to-purple-100">
 <head>
     <meta charset="UTF-8">
-    <title>Parkinson's Data Dashboard</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson's Patient Data Dashboard</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://jsuites.net/v4/jsuites.js"></script>
+    <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .chart {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+            animation: fadeIn 0.5s ease-out, slideIn 0.5s ease-out;
+        }
+        .chart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            pointer-events: none;
+            z-index: 1000;
+            transition: all 0.2s ease-in-out;
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.3s ease-in-out;
+        }
+        .glassmorphism:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.47);
+        }
+        .chart-row {
+            display: flex;
+            gap: 1rem;
+        }
+        #combined-chart {
+            flex: 0 0 80%;
+        }
+        #polar-plot {
+            flex: 0 0 20%;
+        }
+        .legend-item {
+            margin-right: 2rem;
+            display: inline-flex;
+            align-items: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            border-radius: 50%;
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(66, 153, 225, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(66, 153, 225, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(66, 153, 225, 0);
+            }
+        }
+    </style>
 </head>
-
-<body>
-    <!-- Header Section -->
-    <header>
-        <div class="header-container">
-            <h1>Parkinson's Patient Data Dashboard</h1>
-            <p class="header-subtitle">
-                This dashboard is designed to assist Parkinson’s patients, their caregivers, and healthcare professionals by visualizing critical data related to the daily experiences of Parkinson's patients.
-            </p>
+<body class="min-h-screen">
+    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 px-4 mb-8">
+        <div class="container mx-auto">
+            <h1 class="text-4xl font-bold mb-2 animate-pulse">Parkinson's Patient Data Dashboard</h1>
+            <p class="text-xl italic">Visualizing daily experiences to improve care and understanding</p>
         </div>
     </header>
 
-    <!-- Main Dashboard Section -->
-    <main>
-        <div id="year-month-selector">
-            <label for="calendar">Select Month:</label>
-            <input id='calendar' />
+    <main class="container mx-auto px-4 py-8">
+        <section class="glassmorphism p-6 mb-8 transition-all duration-300 hover:scale-105">
+            <h2 class="text-2xl font-semibold mb-4">About This Dashboard</h2>
+            <p class="text-gray-700">This dashboard is designed to assist Parkinson's patients, their caregivers, and healthcare professionals by visualizing critical data related to the daily experiences of Parkinson's patients. It provides insights into fitness levels, symptom severity, and medication intake patterns over time.</p>
+        </section>
 
-            <!-- Existing hidden selectors for compatibility -->
-            <select id="year" style="display:none;"></select>
-            <select id="month" style="display:none;"></select>
-
-            <button id="load-data" style="display:none;">Load Data</button>
-        </div>
-        <div id="date-selector-container">
-            <label for="date-selector">Select Date:</label>
-            <select id="date-selector"></select>
-        </div>
-        <div id="charts">
-            <div id="tt1">
-                <div id="combined-chart" class="chart"></div>
-                <div id="polar-plot" class="chart"></div>
+        <div class="glassmorphism p-6 mb-8 flex flex-wrap items-center justify-between">
+            <div id="year-month-selector" class="flex items-center mb-4 md:mb-0">
+                <label for="calendar" class="mr-2">Select Month:</label>
+                <input type="text" id="calendar" class="border rounded px-2 py-1" />
+                <select id="year" style="display:none;"></select>
+                <select id="month" style="display:none;"></select>
             </div>
-            </br>
-            <div id="tt2">
-                <div id="fitness-chart" class="chart"></div>
-                <div id="parkinsons-chart" class="chart"></div>
+            <button id="load-data" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 pulse">Load Data</button>
+            <div id="date-selector-container" class="flex items-center mt-4 md:mt-0">
+                <label for="date-selector" class="mr-2">Select Date:</label>
+                <select id="date-selector" class="border rounded px-2 py-1"></select>
             </div>
         </div>
-        <div id="tooltip" class="tooltip"></div>
+
+        <div id="charts" class="space-y-12">
+            <div class="chart-row">
+                <div id="combined-chart" class="chart p-6">
+                    <h3 class="text-2xl font-semibold mb-4">Overview: Fitness, Parkinson's Levels, and Medication Intake</h3>
+                    <p class="text-sm text-gray-600 mb-4">This chart provides a comprehensive view of the patient's condition over time. It shows daily averages of fitness and Parkinson's symptom levels, along with total medication intake.</p>
+                    <div id="combined-chart-legend" class="mt-4 flex flex-wrap justify-center"></div>
+                </div>
+                <div id="polar-plot" class="chart p-6">
+                    <h3 class="text-2xl font-semibold mb-4">Daily Medication Intake Pattern</h3>
+                    <p class="text-sm text-gray-600 mb-4">This polar plot visualizes the timing and dosage of medication intake throughout the day. It helps identify patterns in medication schedules.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div id="fitness-chart" class="chart p-6">
+                    <h3 class="text-2xl font-semibold mb-4">Daily Fitness Levels</h3>
+                    <p class="text-sm text-gray-600 mb-4">This chart shows the fluctuation of fitness levels throughout the day. Higher levels indicate better physical condition.</p>
+                </div>
+                <div id="parkinsons-chart" class="chart p-6">
+                    <h3 class="text-2xl font-semibold mb-4">Daily Parkinson's Symptom Levels</h3>
+                    <p class="text-sm text-gray-600 mb-4">This chart displays the severity of Parkinson's symptoms throughout the day. Lower levels indicate better symptom management.</p>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Footer Section -->
-    <footer>
-        <div class="footer-container">
-            <p>
-                The visualizations above provide key insights into the daily patterns of Parkinson's patients, highlighting trends in fitness levels, Parkinson's symptoms, and medication intake over time.
-            </p>
-            <p>
-                <small>&copy; 2024 Parkinson's Data Dashboard. All rights reserved.</small>
-            </p>
+    <div id="tooltip" class="tooltip" style="opacity: 0;"></div>
+
+    <footer class="bg-gradient-to-r from-gray-800 to-gray-900 text-white py-6 px-4 mt-12">
+        <div class="container mx-auto text-center">
+            <p>© 2024 Parkinson's Data Dashboard. All rights reserved.</p>
+            <p class="mt-2 text-sm text-gray-400">Disclaimer: This dashboard is for informational purposes only and should not replace professional medical advice.</p>
         </div>
     </footer>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script src="https://jsuites.net/v5/jsuites.js"></script>
-    <script src="script.js" defer></script>
+    <script src="script.js"></script>
+    <script>
+        // New JavaScript for enhanced legend
+        function createEnhancedLegend() {
+            const legendData = [
+                { color: "green", label: "Fitness Level" },
+                { color: "blue", label: "Parkinson's Level" },
+                { color: "red", label: "Medication Intake" }
+            ];
 
+            const legend = d3.select("#combined-chart-legend");
+            
+            legend.selectAll(".legend-item")
+                .data(legendData)
+                .enter()
+                .append("div")
+                .attr("class", "legend-item")
+                .html(d => `
+                    <div class="legend-color" style="background-color: ${d.color};"></div>
+                    <span>${d.label}</span>
+                `);
+        }
+
+        // Call this function after your chart is created
+        createEnhancedLegend();
+    </script>
 </body>
-
 </html>
