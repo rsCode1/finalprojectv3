@@ -9,32 +9,58 @@
 </head>
 
 <body>
-    <div id="year-month-selector">
-        <label for="calendar">Select Month:</label>
-        <input id='calendar' />
-
-        <!-- Existing hidden selectors for compatibility -->
-        <select id="year" style="display:none;"></select>
-        <select id="month" style="display:none;"></select>
-
-        <button id="load-data" style="display:none;">Load Data</button>
-    </div>
-    <div id="date-selector-container">
-        <label for="date-selector">Select Date:</label>
-        <select id="date-selector"></select>
-    </div>
-    <div id="charts">
-        <div id="tt1">
-            <div id="combined-chart" class="chart"></div>
-            <div id="polar-plot" class="chart"></div>
+    <!-- Header Section -->
+    <header>
+        <div class="header-container">
+            <h1>Parkinson's Patient Data Dashboard</h1>
+            <p class="header-subtitle">
+                This dashboard is designed to assist Parkinson’s patients, their caregivers, and healthcare professionals by visualizing critical data related to the daily experiences of Parkinson's patients.
+            </p>
         </div>
-        </br>
-        <div id="tt2">
-            <div id="fitness-chart" class="chart"></div>
-            <div id="parkinsons-chart" class="chart"></div>
+    </header>
+
+    <!-- Main Dashboard Section -->
+    <main>
+        <div id="year-month-selector">
+            <label for="calendar">Select Month:</label>
+            <input id='calendar' />
+
+            <!-- Existing hidden selectors for compatibility -->
+            <select id="year" style="display:none;"></select>
+            <select id="month" style="display:none;"></select>
+
+            <button id="load-data" style="display:none;">Load Data</button>
         </div>
-    </div>
-    <div id="tooltip" class="tooltip"></div>
+        <div id="date-selector-container">
+            <label for="date-selector">Select Date:</label>
+            <select id="date-selector"></select>
+        </div>
+        <div id="charts">
+            <div id="tt1">
+                <div id="combined-chart" class="chart"></div>
+                <div id="polar-plot" class="chart"></div>
+            </div>
+            </br>
+            <div id="tt2">
+                <div id="fitness-chart" class="chart"></div>
+                <div id="parkinsons-chart" class="chart"></div>
+            </div>
+        </div>
+        <div id="tooltip" class="tooltip"></div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-container">
+            <p>
+                The visualizations above provide key insights into the daily patterns of Parkinson's patients, highlighting trends in fitness levels, Parkinson's symptoms, and medication intake over time.
+            </p>
+            <p>
+                <small>&copy; 2024 Parkinson's Data Dashboard. All rights reserved.</small>
+            </p>
+        </div>
+    </footer>
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="https://jsuites.net/v5/jsuites.js"></script>
