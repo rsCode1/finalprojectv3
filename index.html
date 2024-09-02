@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://jsuites.net/v4/jsuites.js"></script>
     <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fadeIn {
@@ -57,12 +58,7 @@
             display: flex;
             gap: 1rem;
         }
-        #combined-chart {
-            flex: 0 0 80%;
-        }
-        #polar-plot {
-            flex: 0 0 20%;
-        }
+
         .legend-item {
             margin-right: 2rem;
             display: inline-flex;
@@ -112,7 +108,7 @@
                 <select id="year" style="display:none;"></select>
                 <select id="month" style="display:none;"></select>
             </div>
-            <button id="load-data" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 pulse">Load Data</button>
+            <button id="load-data" style="display:none;" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 pulse">Load Data</button>
             <div id="date-selector-container" class="flex items-center mt-4 md:mt-0">
                 <label for="date-selector" class="mr-2">Select Date:</label>
                 <select id="date-selector" class="border rounded px-2 py-1"></select>
@@ -124,21 +120,37 @@
                 <div id="combined-chart" class="chart p-6">
                     <h3 class="text-2xl font-semibold mb-4">Overview: Fitness, Parkinson's Levels, and Medication Intake</h3>
                     <p class="text-sm text-gray-600 mb-4">This chart provides a comprehensive view of the patient's condition over time. It shows daily averages of fitness and Parkinson's symptom levels, along with total medication intake.</p>
+                    <div id="interaction-reminder" class="interaction-reminder">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>Hover over the bars and dots to see details or click the bars to load other charts!</span>
+                    </div>
                     <div id="combined-chart-legend" class="mt-4 flex flex-wrap justify-center"></div>
                 </div>
                 <div id="polar-plot" class="chart p-6">
                     <h3 class="text-2xl font-semibold mb-4">Daily Medication Intake Pattern</h3>
                     <p class="text-sm text-gray-600 mb-4">This polar plot visualizes the timing and dosage of medication intake throughout the day. It helps identify patterns in medication schedules.</p>
+                    <div id="interaction-reminder" class="interaction-reminder">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>Hover over the dots to see details!</span>
+                    </div>
                 </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div id="fitness-chart" class="chart p-6">
                     <h3 class="text-2xl font-semibold mb-4">Daily Fitness Levels</h3>
                     <p class="text-sm text-gray-600 mb-4">This chart shows the fluctuation of fitness levels throughout the day. Higher levels indicate better physical condition.</p>
+                    <div id="interaction-reminder" class="interaction-reminder">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>Hover over the bars to see details!</span>
+                    </div>
                 </div>
                 <div id="parkinsons-chart" class="chart p-6">
                     <h3 class="text-2xl font-semibold mb-4">Daily Parkinson's Symptom Levels</h3>
-                    <p class="text-sm text-gray-600 mb-4">This chart displays the severity of Parkinson's symptoms throughout the day. Lower levels indicate better symptom management.</p>
+                    <p class="text-sm text-gray-600 mb-4">This chart displays the severity of Parkinson's symptoms throughout the day. Higher levels indicate better symptom management.</p>
+                    <div id="interaction-reminder" class="interaction-reminder">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>Hover over the bars to see details!</span>
+                    </div>
                 </div>
             </div>
         </div>
